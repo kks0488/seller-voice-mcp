@@ -24,8 +24,8 @@ export function createServer(env: Env = process.env) {
     return wrap(`I found ${data.findings.length} claim flags and ${data.missingFacts.length} missing fact fields. ${data.findings.length ? 'Review the highlighted wording before publishing.' : 'Review the remaining facts before publishing.'}`, data, 'deterministic');
   });
   for (const [name, title, description, speech] of [
-    ['ad_headlines', 'Draft three ad headlines', 'Draft exactly three headlines using only supplied product facts.', 'I drafted three headlines for your product. Review them before publishing.'],
-    ['shorts_script', 'Draft a 30-second short', 'Draft a 30-second product video script with contiguous timed scenes, voiceover and a call to action.', 'Your thirty-second script is ready. The screen shows each scene and its voiceover.'],
+    ['ad_headlines', 'Draft three ad headlines', 'Draft three distinct selling angles, each at most 40 characters, grounded in supplied product facts.', 'I drafted three headlines for your product. Review them before publishing.'],
+    ['shorts_script', 'Draft a 30-second short', 'Draft a 30-second product video script with a two-second hook, contiguous timed scenes, visuals, voiceover, onScreen text and a call to action.', 'Your thirty-second script is ready. The screen shows each scene and its voiceover.'],
     ['detail_page_outline', 'Outline a detail page', 'Draft a product detail page outline and identify information still needed.', 'Your detail page outline is ready. Check the missing information before publishing.'],
   ] as const) {
     server.registerTool(name, { title, description, inputSchema: contentInput.shape,

@@ -1,50 +1,667 @@
 {
   "url": "https://seller-voice-mcp.vercel.app",
-  "capturedAt": "2026-10-16T07:05:43.114Z",
+  "capturedAt": "2026-10-16T07:47:07.965Z",
+  "complete": true,
   "viewport": "1920x1080",
   "calls": [
     {
       "tool": "margin_check",
+      "capturedAt": "2026-10-16T07:46:23.845Z",
       "mode": "deterministic",
+      "data": {
+        "price": 29000,
+        "cost": 11000,
+        "feePct": 0,
+        "shipping": 0,
+        "adCost": 0,
+        "currency": "KRW",
+        "fee": 0,
+        "profitBeforeAds": 18000,
+        "unitProfit": 18000,
+        "marginPct": 62.06896551724138,
+        "breakEvenRoas": 1.6111111111111112,
+        "warnings": []
+      },
       "speech": "Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times."
     },
     {
       "tool": "ad_headlines",
+      "capturedAt": "2026-10-16T07:46:35.385Z",
       "mode": "live",
+      "data": {
+        "headlines": [
+          "Dinner prep starts here",
+          "Put bamboo on prep duty",
+          "What's cooking in your kitchen?"
+        ]
+      },
       "speech": "I drafted three headlines for your product. Review them before publishing.",
+      "model": "nvidia/Nemotron-3_5-Lightning",
       "usage": {
-        "prompt_tokens": 176,
-        "completion_tokens": 35,
-        "total_tokens": 211
+        "prompt_tokens": 1401,
+        "completion_tokens": 41,
+        "total_tokens": 1442
       }
     },
     {
       "tool": "listing_audit",
+      "capturedAt": "2026-10-16T07:46:44.085Z",
       "mode": "deterministic",
+      "data": {
+        "findings": [
+          {
+            "priority": "high",
+            "issue": "Medical or disease claim",
+            "excerpt": "cures",
+            "fix": "Remove the claim unless it is permitted and supported by evidence."
+          },
+          {
+            "priority": "high",
+            "issue": "Absolute guarantee",
+            "excerpt": "guaranteed",
+            "fix": "Replace with specific, supported product facts."
+          },
+          {
+            "priority": "high",
+            "issue": "Antimicrobial claim",
+            "excerpt": "antibacterial",
+            "fix": "Verify applicable rules and supporting test conditions before publication."
+          }
+        ],
+        "missingFacts": [
+          "material",
+          "dimensions",
+          "shipping",
+          "returns"
+        ],
+        "status": "review",
+        "note": "A limited pattern check, not legal approval; negated or quoted claims may also be flagged. Missing facts refer to the supplied facts fields."
+      },
       "speech": "I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing."
     },
     {
       "tool": "shorts_script",
+      "capturedAt": "2026-10-16T07:46:53.918Z",
       "mode": "live",
+      "data": {
+        "scenes": [
+          {
+            "start": 0,
+            "end": 2,
+            "visual": "Open on the actual board.",
+            "voiceover": "Dinner prep?",
+            "onScreen": "What's cooking tonight?"
+          },
+          {
+            "start": 2,
+            "end": 9,
+            "visual": "Place the board on a countertop used for staging.",
+            "voiceover": "Bring this bamboo board to your next prep session.",
+            "onScreen": "Put bamboo on prep duty"
+          },
+          {
+            "start": 9,
+            "end": 17,
+            "visual": "Show the board with a plain text size overlay.",
+            "voiceover": "The board measures thirty by twenty centimeters.",
+            "onScreen": "30 × 20 cm"
+          },
+          {
+            "start": 17,
+            "end": 23,
+            "visual": "Hold on the actual board with a care-text overlay.",
+            "voiceover": "One care note before you start: hand wash only.",
+            "onScreen": "Hand wash only"
+          },
+          {
+            "start": 23,
+            "end": 30,
+            "visual": "Hold on the board and a product-details link.",
+            "voiceover": "What's on your prep list? Take a closer look.",
+            "onScreen": "Explore the details"
+          }
+        ],
+        "cta": "Explore the product details."
+      },
       "speech": "Your thirty-second script is ready. The screen shows each scene and its voiceover.",
+      "model": "nvidia/Nemotron-3_5-Lightning",
       "usage": {
-        "prompt_tokens": 327,
-        "completion_tokens": 198,
-        "total_tokens": 525
+        "prompt_tokens": 2012,
+        "completion_tokens": 289,
+        "total_tokens": 2301
       }
     },
     {
       "tool": "detail_page_outline",
+      "capturedAt": "2026-10-16T07:47:02.868Z",
       "mode": "live",
+      "data": {
+        "sections": [
+          {
+            "title": "Dinner starts with the prep",
+            "body": "Bring this bamboo cutting board to your next prep session."
+          },
+          {
+            "title": "Check the fit for your workspace",
+            "body": "Dimensions: 30 × 20 cm. Compare these measurements with the space you plan to use."
+          },
+          {
+            "title": "Bamboo, front and center",
+            "body": "Material: bamboo."
+          },
+          {
+            "title": "Keep this care note close",
+            "body": "Hand wash only."
+          }
+        ],
+        "needsInfo": [
+          "Shipping and returns"
+        ]
+      },
       "speech": "Your detail page outline is ready. Check the missing information before publishing.",
+      "model": "nvidia/Nemotron-3_5-Lightning",
       "usage": {
-        "prompt_tokens": 263,
-        "completion_tokens": 129,
-        "total_tokens": 392
+        "prompt_tokens": 1575,
+        "completion_tokens": 133,
+        "total_tokens": 1708
       }
     }
   ],
+  "segments": [
+    {
+      "name": "margin-request",
+      "start": 3.401,
+      "duration": 5.53,
+      "seconds": 8
+    },
+    {
+      "name": "headlines-live",
+      "start": 14.295,
+      "duration": 6.176,
+      "seconds": 8
+    },
+    {
+      "name": "audit-live",
+      "start": 22.979,
+      "duration": 6.193,
+      "seconds": 8
+    },
+    {
+      "name": "shorts-live",
+      "start": 31.695,
+      "duration": 7.31,
+      "seconds": 9
+    },
+    {
+      "name": "outline-live",
+      "start": 41.477,
+      "duration": 6.477,
+      "seconds": 9
+    }
+  ],
+  "panels": {
+    "margin-input": {
+      "question": {
+        "x": 356,
+        "y": 746.25,
+        "width": 693,
+        "height": 61.5625
+      },
+      "send": {
+        "x": 939.46875,
+        "y": 817.8125,
+        "width": 109.53125,
+        "height": 34
+      }
+    },
+    "margin": [
+      {
+        "selector": ".result-panel",
+        "x": 1105,
+        "y": 431.25,
+        "width": 721,
+        "height": 470.5625,
+        "text": "\n          Your answer, at a glanceDETERMINISTIC\n          YOU ASKED  /  What's my break-even ROAS if I sell at 29,000 won with 11,000 cost?✧Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.BREAK-EVEN ROAS1.61×UNIT PROFIT₩18,000PROFIT MARGIN62.1%Price ₩29,000 − cost ₩11,000 − fees ₩0 − shipping ₩0 − ads ₩0. ROAS uses profit before ads. Excludes taxes, overhead and returns.\n        ",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#result",
+        "x": 1128,
+        "y": 488.25,
+        "width": 675,
+        "height": 355.1875,
+        "text": "YOU ASKED  /  What's my break-even ROAS if I sell at 29,000 won with 11,000 cost?✧Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.BREAK-EVEN ROAS1.61×UNIT PROFIT₩18,000PROFIT MARGIN62.1%Price ₩29,000 − cost ₩11,000 − fees ₩0 − shipping ₩0 − ads ₩0. ROAS uses profit before ads. Excludes taxes, overhead and returns.",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#payload-content",
+        "x": 360,
+        "y": 1021,
+        "width": 1448,
+        "height": 300,
+        "text": "{\n  \"request\": {\n    \"method\": \"tools/call\",\n    \"params\": {\n      \"name\": \"margin_check\",\n      \"arguments\": {\n        \"price\": 29000,\n        \"cost\": 11000,\n        \"feePct\": 0,\n        \"shipping\": 0,\n        \"adCost\": 0,\n        \"currency\": \"KRW\"\n      }\n    }\n  },\n  \"response\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"speech\\\":\\\"Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.\\\",\\\"data\\\":{\\\"price\\\":29000,\\\"cost\\\":11000,\\\"feePct\\\":0,\\\"shipping\\\":0,\\\"adCost\\\":0,\\\"currency\\\":\\\"KRW\\\",\\\"fee\\\":0,\\\"profitBeforeAds\\\":18000,\\\"unitProfit\\\":18000,\\\"marginPct\\\":62.06896551724138,\\\"breakEvenRoas\\\":1.6111111111111112,\\\"warnings\\\":[]},\\\"mode\\\":\\\"deterministic\\\"}\"\n      }\n    ],\n    \"structuredContent\": {\n      \"speech\": \"Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.\",\n      \"data\": {\n        \"price\": 29000,\n        \"cost\": 11000,\n        \"feePct\": 0,\n        \"shipping\": 0,\n        \"adCost\": 0,\n        \"currency\": \"KRW\",\n        \"fee\": 0,\n        \"profitBeforeAds\": 18000,\n        \"unitProfit\": 18000,\n        \"marginPct\": 62.06896551724138,\n        \"breakEvenRoas\": 1.6111111111111112,\n        \"warnings\": []\n      },\n      \"mode\": \"deterministic\"\n    }\n  }\n}",
+        "fontSize": "10px"
+      },
+      {
+        "selector": ".answer-speech",
+        "x": 1128,
+        "y": 526.25,
+        "width": 675,
+        "height": 83,
+        "text": "✧Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.",
+        "fontSize": "15px"
+      },
+      {
+        "selector": ".metrics",
+        "x": 1128,
+        "y": 629.25,
+        "width": 675,
+        "height": 170,
+        "text": "BREAK-EVEN ROAS1.61×UNIT PROFIT₩18,000PROFIT MARGIN62.1%",
+        "fontSize": "14px"
+      }
+    ],
+    "payload": [
+      {
+        "selector": ".result-panel",
+        "x": 1105,
+        "y": 111.25,
+        "width": 721,
+        "height": 470.5625,
+        "text": "\n          Your answer, at a glanceDETERMINISTIC\n          YOU ASKED  /  What's my break-even ROAS if I sell at 29,000 won with 11,000 cost?✧Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.BREAK-EVEN ROAS1.61×UNIT PROFIT₩18,000PROFIT MARGIN62.1%Price ₩29,000 − cost ₩11,000 − fees ₩0 − shipping ₩0 − ads ₩0. ROAS uses profit before ads. Excludes taxes, overhead and returns.\n        ",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#result",
+        "x": 1128,
+        "y": 168.25,
+        "width": 675,
+        "height": 355.1875,
+        "text": "YOU ASKED  /  What's my break-even ROAS if I sell at 29,000 won with 11,000 cost?✧Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.BREAK-EVEN ROAS1.61×UNIT PROFIT₩18,000PROFIT MARGIN62.1%Price ₩29,000 − cost ₩11,000 − fees ₩0 − shipping ₩0 − ads ₩0. ROAS uses profit before ads. Excludes taxes, overhead and returns.",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#payload-content",
+        "x": 360,
+        "y": 701,
+        "width": 1448,
+        "height": 300,
+        "text": "{\n  \"request\": {\n    \"method\": \"tools/call\",\n    \"params\": {\n      \"name\": \"margin_check\",\n      \"arguments\": {\n        \"price\": 29000,\n        \"cost\": 11000,\n        \"feePct\": 0,\n        \"shipping\": 0,\n        \"adCost\": 0,\n        \"currency\": \"KRW\"\n      }\n    }\n  },\n  \"response\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"speech\\\":\\\"Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.\\\",\\\"data\\\":{\\\"price\\\":29000,\\\"cost\\\":11000,\\\"feePct\\\":0,\\\"shipping\\\":0,\\\"adCost\\\":0,\\\"currency\\\":\\\"KRW\\\",\\\"fee\\\":0,\\\"profitBeforeAds\\\":18000,\\\"unitProfit\\\":18000,\\\"marginPct\\\":62.06896551724138,\\\"breakEvenRoas\\\":1.6111111111111112,\\\"warnings\\\":[]},\\\"mode\\\":\\\"deterministic\\\"}\"\n      }\n    ],\n    \"structuredContent\": {\n      \"speech\": \"Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.\",\n      \"data\": {\n        \"price\": 29000,\n        \"cost\": 11000,\n        \"feePct\": 0,\n        \"shipping\": 0,\n        \"adCost\": 0,\n        \"currency\": \"KRW\",\n        \"fee\": 0,\n        \"profitBeforeAds\": 18000,\n        \"unitProfit\": 18000,\n        \"marginPct\": 62.06896551724138,\n        \"breakEvenRoas\": 1.6111111111111112,\n        \"warnings\": []\n      },\n      \"mode\": \"deterministic\"\n    }\n  }\n}",
+        "fontSize": "10px"
+      },
+      {
+        "selector": ".answer-speech",
+        "x": 1128,
+        "y": 206.25,
+        "width": 675,
+        "height": 83,
+        "text": "✧Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times.",
+        "fontSize": "15px"
+      },
+      {
+        "selector": ".metrics",
+        "x": 1128,
+        "y": 309.25,
+        "width": 675,
+        "height": 170,
+        "text": "BREAK-EVEN ROAS1.61×UNIT PROFIT₩18,000PROFIT MARGIN62.1%",
+        "fontSize": "14px"
+      }
+    ],
+    "headlines-input": {
+      "question": {
+        "x": 356,
+        "y": 729.25,
+        "width": 693,
+        "height": 61.5625
+      },
+      "send": {
+        "x": 951.46875,
+        "y": 800.8125,
+        "width": 97.53125,
+        "height": 34
+      }
+    },
+    "headlines": [
+      {
+        "selector": ".result-panel",
+        "x": 1105,
+        "y": 431.25,
+        "width": 721,
+        "height": 470.5625,
+        "text": "\n          Your answer, at a glanceLIVE\n          YOU ASKED  /  Give me three ad headlines for the bamboo cutting board✧I drafted three headlines for your product. Review them before publishing.HEADLINE 01Dinner prep starts hereHEADLINE 02Put bamboo on prep dutyHEADLINE 03What's cooking in your kitchen?\n        ",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#result",
+        "x": 1128,
+        "y": 488.25,
+        "width": 675,
+        "height": 355.171875,
+        "text": "YOU ASKED  /  Give me three ad headlines for the bamboo cutting board✧I drafted three headlines for your product. Review them before publishing.HEADLINE 01Dinner prep starts hereHEADLINE 02Put bamboo on prep dutyHEADLINE 03What's cooking in your kitchen?",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#payload-content",
+        "x": 360,
+        "y": 1021,
+        "width": 1448,
+        "height": 300,
+        "text": "{\n  \"request\": {\n    \"method\": \"tools/call\",\n    \"params\": {\n      \"name\": \"ad_headlines\",\n      \"arguments\": {\n        \"product\": \"bamboo cutting board\",\n        \"facts\": \"Bamboo cutting board. Material: bamboo. Dimensions: 30 × 20 cm. Hand wash only.\",\n        \"audience\": \"everyday shoppers\"\n      }\n    }\n  },\n  \"response\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"speech\\\":\\\"I drafted three headlines for your product. Review them before publishing.\\\",\\\"data\\\":{\\\"headlines\\\":[\\\"Dinner prep starts here\\\",\\\"Put bamboo on prep duty\\\",\\\"What's cooking in your kitchen?\\\"]},\\\"mode\\\":\\\"live\\\",\\\"model\\\":\\\"nvidia/Nemotron-3_5-Lightning\\\",\\\"usage\\\":{\\\"prompt_tokens\\\":1401,\\\"completion_tokens\\\":41,\\\"total_tokens\\\":1442}}\"\n      }\n    ],\n    \"structuredContent\": {\n      \"speech\": \"I drafted three headlines for your product. Review them before publishing.\",\n      \"data\": {\n        \"headlines\": [\n          \"Dinner prep starts here\",\n          \"Put bamboo on prep duty\",\n          \"What's cooking in your kitchen?\"\n        ]\n      },\n      \"mode\": \"live\",\n      \"model\": \"nvidia/Nemotron-3_5-Lightning\",\n      \"usage\": {\n        \"prompt_tokens\": 1401,\n        \"completion_tokens\": 41,\n        \"total_tokens\": 1442\n      }\n    }\n  }\n}",
+        "fontSize": "10px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 612.25,
+        "width": 675,
+        "height": 70.390625,
+        "text": "HEADLINE 01Dinner prep starts here",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 692.640625,
+        "width": 675,
+        "height": 70.390625,
+        "text": "HEADLINE 02Put bamboo on prep duty",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 773.03125,
+        "width": 675,
+        "height": 70.390625,
+        "text": "HEADLINE 03What's cooking in your kitchen?",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".answer-speech",
+        "x": 1128,
+        "y": 526.25,
+        "width": 675,
+        "height": 66,
+        "text": "✧I drafted three headlines for your product. Review them before publishing.",
+        "fontSize": "15px"
+      }
+    ],
+    "audit-input": {
+      "question": {
+        "x": 356,
+        "y": 729.25,
+        "width": 693,
+        "height": 61.5625
+      },
+      "send": {
+        "x": 951.46875,
+        "y": 800.8125,
+        "width": 97.53125,
+        "height": 34
+      }
+    },
+    "audit": [
+      {
+        "selector": ".result-panel",
+        "x": 1105,
+        "y": 347.25,
+        "width": 721,
+        "height": 554.359375,
+        "text": "\n          Your answer, at a glanceDETERMINISTIC\n          YOU ASKED  /  Check my listing: This bamboo cutting board is guaranteed antibacterial and cures food allergies.✧I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing.HIGH · Medical or disease claim“cures” — Remove the claim unless it is permitted and supported by evidence.HIGH · Absolute guarantee“guaranteed” — Replace with specific, supported product facts.HIGH · Antimicrobial claim“antibacterial” — Verify applicable rules and supporting test conditions before publication.Missing fact fields: material, dimensions, shipping, returns. Provide these in the MCP facts object for a complete check.A limited pattern check, not legal approval; negated or quoted claims may also be flagged. Missing facts refer to the supplied facts fields.\n        ",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#result",
+        "x": 1128,
+        "y": 404.25,
+        "width": 675,
+        "height": 476.359375,
+        "text": "YOU ASKED  /  Check my listing: This bamboo cutting board is guaranteed antibacterial and cures food allergies.✧I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing.HIGH · Medical or disease claim“cures” — Remove the claim unless it is permitted and supported by evidence.HIGH · Absolute guarantee“guaranteed” — Replace with specific, supported product facts.HIGH · Antimicrobial claim“antibacterial” — Verify applicable rules and supporting test conditions before publication.Missing fact fields: material, dimensions, shipping, returns. Provide these in the MCP facts object for a complete check.A limited pattern check, not legal approval; negated or quoted claims may also be flagged. Missing facts refer to the supplied facts fields.",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#payload-content",
+        "x": 360,
+        "y": 1020.796875,
+        "width": 1448,
+        "height": 300,
+        "text": "{\n  \"request\": {\n    \"method\": \"tools/call\",\n    \"params\": {\n      \"name\": \"listing_audit\",\n      \"arguments\": {\n        \"listing\": \"This bamboo cutting board is guaranteed antibacterial and cures food allergies.\",\n        \"facts\": {}\n      }\n    }\n  },\n  \"response\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"speech\\\":\\\"I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing.\\\",\\\"data\\\":{\\\"findings\\\":[{\\\"priority\\\":\\\"high\\\",\\\"issue\\\":\\\"Medical or disease claim\\\",\\\"excerpt\\\":\\\"cures\\\",\\\"fix\\\":\\\"Remove the claim unless it is permitted and supported by evidence.\\\"},{\\\"priority\\\":\\\"high\\\",\\\"issue\\\":\\\"Absolute guarantee\\\",\\\"excerpt\\\":\\\"guaranteed\\\",\\\"fix\\\":\\\"Replace with specific, supported product facts.\\\"},{\\\"priority\\\":\\\"high\\\",\\\"issue\\\":\\\"Antimicrobial claim\\\",\\\"excerpt\\\":\\\"antibacterial\\\",\\\"fix\\\":\\\"Verify applicable rules and supporting test conditions before publication.\\\"}],\\\"missingFacts\\\":[\\\"material\\\",\\\"dimensions\\\",\\\"shipping\\\",\\\"returns\\\"],\\\"status\\\":\\\"review\\\",\\\"note\\\":\\\"A limited pattern check, not legal approval; negated or quoted claims may also be flagged. Missing facts refer to the supplied facts fields.\\\"},\\\"mode\\\":\\\"deterministic\\\"}\"\n      }\n    ],\n    \"structuredContent\": {\n      \"speech\": \"I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing.\",\n      \"data\": {\n        \"findings\": [\n          {\n            \"priority\": \"high\",\n            \"issue\": \"Medical or disease claim\",\n            \"excerpt\": \"cures\",\n            \"fix\": \"Remove the claim unless it is permitted and supported by evidence.\"\n          },\n          {\n            \"priority\": \"high\",\n            \"issue\": \"Absolute guarantee\",\n            \"excerpt\": \"guaranteed\",\n            \"fix\": \"Replace with specific, supported product facts.\"\n          },\n          {\n            \"priority\": \"high\",\n            \"issue\": \"Antimicrobial claim\",\n            \"excerpt\": \"antibacterial\",\n            \"fix\": \"Verify applicable rules and supporting test conditions before publication.\"\n          }\n        ],\n        \"missingFacts\": [\n          \"material\",\n          \"dimensions\",\n          \"shipping\",\n          \"returns\"\n        ],\n        \"status\": \"review\",\n        \"note\": \"A limited pattern check, not legal approval; negated or quoted claims may also be flagged. Missing facts refer to the supplied facts fields.\"\n      },\n      \"mode\": \"deterministic\"\n    }\n  }\n}",
+        "fontSize": "10px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 545.25,
+        "width": 675,
+        "height": 70.390625,
+        "text": "HIGH · Medical or disease claim“cures” — Remove the claim unless it is permitted and supported by evidence.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 625.640625,
+        "width": 675,
+        "height": 70.390625,
+        "text": "HIGH · Absolute guarantee“guaranteed” — Replace with specific, supported product facts.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 706.03125,
+        "width": 675,
+        "height": 70.390625,
+        "text": "HIGH · Antimicrobial claim“antibacterial” — Verify applicable rules and supporting test conditions before publication.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".answer-speech",
+        "x": 1128,
+        "y": 442.25,
+        "width": 675,
+        "height": 83,
+        "text": "✧I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing.",
+        "fontSize": "15px"
+      }
+    ],
+    "shorts-input": {
+      "question": {
+        "x": 356,
+        "y": 645.25,
+        "width": 693,
+        "height": 61.5625
+      },
+      "send": {
+        "x": 951.46875,
+        "y": 716.8125,
+        "width": 97.53125,
+        "height": 34
+      }
+    },
+    "shorts": [
+      {
+        "selector": ".result-panel",
+        "x": 1105,
+        "y": 139.25,
+        "width": 721,
+        "height": 762.3125,
+        "text": "\n          Your answer, at a glanceLIVE\n          YOU ASKED  /  Draft a 30-second shorts script for the bamboo cutting board✧Your thirty-second script is ready. The screen shows each scene and its voiceover.0–2s · Open on the actual board.Dinner prep?ON SCREEN · What's cooking tonight?2–9s · Place the board on a countertop used for staging.Bring this bamboo board to your next prep session.ON SCREEN · Put bamboo on prep duty9–17s · Show the board with a plain text size overlay.The board measures thirty by twenty centimeters.ON SCREEN · 30 × 20 cm17–23s · Hold on the actual board with a care-text overlay.One care note before you start: hand wash only.ON SCREEN · Hand wash only23–30s · Hold on the board and a product-details link.What's on your prep list? Take a closer look.ON SCREEN · Explore the detailsCALL TO ACTIONExplore the product details.\n        ",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#result",
+        "x": 1128,
+        "y": 196.25,
+        "width": 675,
+        "height": 684.3125,
+        "text": "YOU ASKED  /  Draft a 30-second shorts script for the bamboo cutting board✧Your thirty-second script is ready. The screen shows each scene and its voiceover.0–2s · Open on the actual board.Dinner prep?ON SCREEN · What's cooking tonight?2–9s · Place the board on a countertop used for staging.Bring this bamboo board to your next prep session.ON SCREEN · Put bamboo on prep duty9–17s · Show the board with a plain text size overlay.The board measures thirty by twenty centimeters.ON SCREEN · 30 × 20 cm17–23s · Hold on the actual board with a care-text overlay.One care note before you start: hand wash only.ON SCREEN · Hand wash only23–30s · Hold on the board and a product-details link.What's on your prep list? Take a closer look.ON SCREEN · Explore the detailsCALL TO ACTIONExplore the product details.",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#payload-content",
+        "x": 360,
+        "y": 1020.75,
+        "width": 1448,
+        "height": 300,
+        "text": "{\n  \"request\": {\n    \"method\": \"tools/call\",\n    \"params\": {\n      \"name\": \"shorts_script\",\n      \"arguments\": {\n        \"product\": \"bamboo cutting board\",\n        \"facts\": \"Bamboo cutting board. Material: bamboo. Dimensions: 30 × 20 cm. Hand wash only.\",\n        \"audience\": \"everyday shoppers\"\n      }\n    }\n  },\n  \"response\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"speech\\\":\\\"Your thirty-second script is ready. The screen shows each scene and its voiceover.\\\",\\\"data\\\":{\\\"scenes\\\":[{\\\"start\\\":0,\\\"end\\\":2,\\\"visual\\\":\\\"Open on the actual board.\\\",\\\"voiceover\\\":\\\"Dinner prep?\\\",\\\"onScreen\\\":\\\"What's cooking tonight?\\\"},{\\\"start\\\":2,\\\"end\\\":9,\\\"visual\\\":\\\"Place the board on a countertop used for staging.\\\",\\\"voiceover\\\":\\\"Bring this bamboo board to your next prep session.\\\",\\\"onScreen\\\":\\\"Put bamboo on prep duty\\\"},{\\\"start\\\":9,\\\"end\\\":17,\\\"visual\\\":\\\"Show the board with a plain text size overlay.\\\",\\\"voiceover\\\":\\\"The board measures thirty by twenty centimeters.\\\",\\\"onScreen\\\":\\\"30 × 20 cm\\\"},{\\\"start\\\":17,\\\"end\\\":23,\\\"visual\\\":\\\"Hold on the actual board with a care-text overlay.\\\",\\\"voiceover\\\":\\\"One care note before you start: hand wash only.\\\",\\\"onScreen\\\":\\\"Hand wash only\\\"},{\\\"start\\\":23,\\\"end\\\":30,\\\"visual\\\":\\\"Hold on the board and a product-details link.\\\",\\\"voiceover\\\":\\\"What's on your prep list? Take a closer look.\\\",\\\"onScreen\\\":\\\"Explore the details\\\"}],\\\"cta\\\":\\\"Explore the product details.\\\"},\\\"mode\\\":\\\"live\\\",\\\"model\\\":\\\"nvidia/Nemotron-3_5-Lightning\\\",\\\"usage\\\":{\\\"prompt_tokens\\\":2012,\\\"completion_tokens\\\":289,\\\"total_tokens\\\":2301}}\"\n      }\n    ],\n    \"structuredContent\": {\n      \"speech\": \"Your thirty-second script is ready. The screen shows each scene and its voiceover.\",\n      \"data\": {\n        \"scenes\": [\n          {\n            \"start\": 0,\n            \"end\": 2,\n            \"visual\": \"Open on the actual board.\",\n            \"voiceover\": \"Dinner prep?\",\n            \"onScreen\": \"What's cooking tonight?\"\n          },\n          {\n            \"start\": 2,\n            \"end\": 9,\n            \"visual\": \"Place the board on a countertop used for staging.\",\n            \"voiceover\": \"Bring this bamboo board to your next prep session.\",\n            \"onScreen\": \"Put bamboo on prep duty\"\n          },\n          {\n            \"start\": 9,\n            \"end\": 17,\n            \"visual\": \"Show the board with a plain text size overlay.\",\n            \"voiceover\": \"The board measures thirty by twenty centimeters.\",\n            \"onScreen\": \"30 × 20 cm\"\n          },\n          {\n            \"start\": 17,\n            \"end\": 23,\n            \"visual\": \"Hold on the actual board with a care-text overlay.\",\n            \"voiceover\": \"One care note before you start: hand wash only.\",\n            \"onScreen\": \"Hand wash only\"\n          },\n          {\n            \"start\": 23,\n            \"end\": 30,\n            \"visual\": \"Hold on the board and a product-details link.\",\n            \"voiceover\": \"What's on your prep list? Take a closer look.\",\n            \"onScreen\": \"Explore the details\"\n          }\n        ],\n        \"cta\": \"Explore the product details.\"\n      },\n      \"mode\": \"live\",\n      \"model\": \"nvidia/Nemotron-3_5-Lightning\",\n      \"usage\": {\n        \"prompt_tokens\": 2012,\n        \"completion_tokens\": 289,\n        \"total_tokens\": 2301\n      }\n    }\n  }\n}",
+        "fontSize": "10px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 320.25,
+        "width": 675,
+        "height": 87.984375,
+        "text": "0–2s · Open on the actual board.Dinner prep?ON SCREEN · What's cooking tonight?",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 418.234375,
+        "width": 675,
+        "height": 87.984375,
+        "text": "2–9s · Place the board on a countertop used for staging.Bring this bamboo board to your next prep session.ON SCREEN · Put bamboo on prep duty",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 516.21875,
+        "width": 675,
+        "height": 87.984375,
+        "text": "9–17s · Show the board with a plain text size overlay.The board measures thirty by twenty centimeters.ON SCREEN · 30 × 20 cm",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 614.203125,
+        "width": 675,
+        "height": 87.984375,
+        "text": "17–23s · Hold on the actual board with a care-text overlay.One care note before you start: hand wash only.ON SCREEN · Hand wash only",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 712.1875,
+        "width": 675,
+        "height": 87.984375,
+        "text": "23–30s · Hold on the board and a product-details link.What's on your prep list? Take a closer look.ON SCREEN · Explore the details",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 810.171875,
+        "width": 675,
+        "height": 70.390625,
+        "text": "CALL TO ACTIONExplore the product details.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".answer-speech",
+        "x": 1128,
+        "y": 234.25,
+        "width": 675,
+        "height": 66,
+        "text": "✧Your thirty-second script is ready. The screen shows each scene and its voiceover.",
+        "fontSize": "15px"
+      }
+    ],
+    "outline-input": {
+      "question": {
+        "x": 356,
+        "y": 437.25,
+        "width": 693,
+        "height": 61.5625
+      },
+      "send": {
+        "x": 951.46875,
+        "y": 508.8125,
+        "width": 97.53125,
+        "height": 34
+      }
+    },
+    "outline": [
+      {
+        "selector": ".result-panel",
+        "x": 1105,
+        "y": 338.25,
+        "width": 721,
+        "height": 563.5625,
+        "text": "\n          Your answer, at a glanceLIVE\n          YOU ASKED  /  Create a detail page outline for the bamboo cutting board✧Your detail page outline is ready. Check the missing information before publishing.DINNER STARTS WITH THE PREPBring this bamboo cutting board to your next prep session.CHECK THE FIT FOR YOUR WORKSPACEDimensions: 30 × 20 cm. Compare these measurements with the space you plan to use.BAMBOO, FRONT AND CENTERMaterial: bamboo.KEEP THIS CARE NOTE CLOSEHand wash only.Shipping and returns\n        ",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#result",
+        "x": 1128,
+        "y": 395.25,
+        "width": 675,
+        "height": 485.5625,
+        "text": "YOU ASKED  /  Create a detail page outline for the bamboo cutting board✧Your detail page outline is ready. Check the missing information before publishing.DINNER STARTS WITH THE PREPBring this bamboo cutting board to your next prep session.CHECK THE FIT FOR YOUR WORKSPACEDimensions: 30 × 20 cm. Compare these measurements with the space you plan to use.BAMBOO, FRONT AND CENTERMaterial: bamboo.KEEP THIS CARE NOTE CLOSEHand wash only.Shipping and returns",
+        "fontSize": "14px"
+      },
+      {
+        "selector": "#payload-content",
+        "x": 360,
+        "y": 1021,
+        "width": 1448,
+        "height": 300,
+        "text": "{\n  \"request\": {\n    \"method\": \"tools/call\",\n    \"params\": {\n      \"name\": \"detail_page_outline\",\n      \"arguments\": {\n        \"product\": \"bamboo cutting board\",\n        \"facts\": \"Bamboo cutting board. Material: bamboo. Dimensions: 30 × 20 cm. Hand wash only.\",\n        \"audience\": \"everyday shoppers\"\n      }\n    }\n  },\n  \"response\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"speech\\\":\\\"Your detail page outline is ready. Check the missing information before publishing.\\\",\\\"data\\\":{\\\"sections\\\":[{\\\"title\\\":\\\"Dinner starts with the prep\\\",\\\"body\\\":\\\"Bring this bamboo cutting board to your next prep session.\\\"},{\\\"title\\\":\\\"Check the fit for your workspace\\\",\\\"body\\\":\\\"Dimensions: 30 × 20 cm. Compare these measurements with the space you plan to use.\\\"},{\\\"title\\\":\\\"Bamboo, front and center\\\",\\\"body\\\":\\\"Material: bamboo.\\\"},{\\\"title\\\":\\\"Keep this care note close\\\",\\\"body\\\":\\\"Hand wash only.\\\"}],\\\"needsInfo\\\":[\\\"Shipping and returns\\\"]},\\\"mode\\\":\\\"live\\\",\\\"model\\\":\\\"nvidia/Nemotron-3_5-Lightning\\\",\\\"usage\\\":{\\\"prompt_tokens\\\":1575,\\\"completion_tokens\\\":133,\\\"total_tokens\\\":1708}}\"\n      }\n    ],\n    \"structuredContent\": {\n      \"speech\": \"Your detail page outline is ready. Check the missing information before publishing.\",\n      \"data\": {\n        \"sections\": [\n          {\n            \"title\": \"Dinner starts with the prep\",\n            \"body\": \"Bring this bamboo cutting board to your next prep session.\"\n          },\n          {\n            \"title\": \"Check the fit for your workspace\",\n            \"body\": \"Dimensions: 30 × 20 cm. Compare these measurements with the space you plan to use.\"\n          },\n          {\n            \"title\": \"Bamboo, front and center\",\n            \"body\": \"Material: bamboo.\"\n          },\n          {\n            \"title\": \"Keep this care note close\",\n            \"body\": \"Hand wash only.\"\n          }\n        ],\n        \"needsInfo\": [\n          \"Shipping and returns\"\n        ]\n      },\n      \"mode\": \"live\",\n      \"model\": \"nvidia/Nemotron-3_5-Lightning\",\n      \"usage\": {\n        \"prompt_tokens\": 1575,\n        \"completion_tokens\": 133,\n        \"total_tokens\": 1708\n      }\n    }\n  }\n}",
+        "fontSize": "10px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 519.25,
+        "width": 675,
+        "height": 70.390625,
+        "text": "DINNER STARTS WITH THE PREPBring this bamboo cutting board to your next prep session.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 599.640625,
+        "width": 675,
+        "height": 70.390625,
+        "text": "CHECK THE FIT FOR YOUR WORKSPACEDimensions: 30 × 20 cm. Compare these measurements with the space you plan to use.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 680.03125,
+        "width": 675,
+        "height": 70.390625,
+        "text": "BAMBOO, FRONT AND CENTERMaterial: bamboo.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".output-item",
+        "x": 1128,
+        "y": 760.421875,
+        "width": 675,
+        "height": 70.390625,
+        "text": "KEEP THIS CARE NOTE CLOSEHand wash only.",
+        "fontSize": "12px"
+      },
+      {
+        "selector": ".answer-speech",
+        "x": 1128,
+        "y": 433.25,
+        "width": 675,
+        "height": 66,
+        "text": "✧Your detail page outline is ready. Check the missing information before publishing.",
+        "fontSize": "15px"
+      }
+    ]
+  },
   "mobile": "390x844, no horizontal overflow",
   "pageErrors": [],
-  "note": "Browser automation with text input; microphone, physical-device voice and Alexa+ account connection were not tested."
+  "note": "Real production MCP responses with smooth typed input; microphone, physical-device voice and Alexa+ account connection were not tested."
 }

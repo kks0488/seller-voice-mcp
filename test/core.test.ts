@@ -1,7 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { auditListing, computeMargin, demoContent, generatedSchemas } from '../src/core.js';
-import { generate, parseFinalJson } from '../src/llm.js';
+import { generate as generateRaw, parseFinalJson, writingPrompt, unsupportedCopy } from '../src/llm.js';
+// Existing provider fixtures cover drafting. A separate test below exercises
+// rejection/retry behavior; successful fixtures receive a factual-review pass.
+const generate: typeof generateRaw = (tool, raw, env, fetchImpl) => generateRaw(tool, raw, env, fetchImpl ? async (url, options) => {
+  const body = JSON.parse(options!.body as string);
+  if (body.messages[0].content.includes('strict factual editor'))
+    return new Response(JSON.stringify({ choices: [{ message: { content: '{"supported":true,"unsupported":[]}' } }] }));
+  return fetchImpl(url, options);
+} : undefined);
 
 test('29,000 won example matches original commerce math', () => {
   const m = computeMargin({ price: 29000, cost: 11000 });
@@ -45,6 +53,16 @@ test('ranking claims are matched at punctuation boundaries', () => {
     assert.ok(auditListing({ listing }).findings.some(f => f.issue === 'Claim needs evidence'));
 });
 const content = { product: 'bamboo board', facts: 'bamboo; 30 × 20 cm; hand wash', audience: 'home cooks' };
+test('copy contracts reject long/repeated headlines and scripts without a two-second hook or screen text', () => {
+  assert.throws(() => generatedSchemas.ad_headlines.parse({ headlines: ['x'.repeat(41), 'Two', 'Three'] }));
+  assert.throws(() => generatedSchemas.ad_headlines.parse({ headlines: ['Same', 'same', 'Different'] }));
+  const script = demoContent('shorts_script', content) as { scenes: { end: number; onScreen?: string }[] };
+  assert.ok(script.scenes.every(s => s.onScreen));
+  script.scenes[0].end = 3;
+  assert.throws(() => generatedSchemas.shorts_script.parse(script));
+  assert.match(writingPrompt('ad_headlines'), /<=40/);
+  assert.match(writingPrompt('detail_page_outline'), /needsInfo/);
+});
 test('all deterministic templates validate, with exactly three headlines and 30 seconds', async () => {
   for (const tool of ['ad_headlines', 'shorts_script', 'detail_page_outline'] as const) {
     assert.deepEqual(await generate(tool, content, {}), { mode: 'demo', data: generatedSchemas[tool].parse(demoContent(tool, content)) });
@@ -63,14 +81,39 @@ test('live mode uses documented OpenAI-compatible request and validates response
     assert.equal(body.model, 'test-model'); assert.equal(body.messages[1].role, 'user');
     assert.deepEqual(body.chat_template_kwargs, { enable_thinking: false });
     assert.deepEqual(body.response_format, { type: 'json_object' });
-    assert.ok(body.max_tokens >= 1000); assert.ok(options!.signal);
-    return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ headlines: ['One', 'Two', 'Three'] }) } }] }));
+    assert.equal(body.max_tokens, 300); assert.ok(options!.signal);
+    return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ headlines: ['Plan dinner prep', 'Put bamboo on prep duty', 'What will you slice next?'] }) } }] }));
   });
   assert.equal(result.mode, 'live');
   const limited = await generate('ad_headlines', content, env, async () => new Response('{}', { status: 429 }));
   assert.equal(limited.mode, 'demo-fallback'); assert.match(limited.notice!, /HTTP 429/);
   assert.equal((await generate('ad_headlines', content, env, async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"headlines":["Only one"]}' } }] })))).mode, 'demo-fallback');
   assert.equal((await generate('shorts_script', content, env, async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ scenes: [{ start: 0, end: 3, visual: 'a', voiceover: 'b' }, { start: 4, end: 15, visual: 'a', voiceover: 'b' }, { start: 15, end: 30, visual: 'a', voiceover: 'b' }], cta: 'Go' }) } }] })))).mode, 'demo-fallback');
+});
+
+test('unsupported live copy is retried once, then visibly falls back; review failures never pass', async () => {
+  let draftCalls = 0, reviewCalls = 0;
+  const result = await generateRaw('ad_headlines', content, { LLM_API_KEY: 'test-placeholder' }, async (_url, options) => {
+    const review = JSON.parse(options!.body as string).messages[0].content.includes('strict factual editor');
+    if (review) reviewCalls++; else draftCalls++;
+    return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify(review
+      ? { supported: false, unsupported: ['Molded edges'] }
+      : { headlines: ['Molded edges', 'Plan dinner prep', 'Ready for tomorrow?'] }) } }] }));
+  });
+  assert.equal(draftCalls, 2); assert.equal(reviewCalls, 2);
+  assert.equal(result.mode, 'demo-fallback'); assert.match(result.notice!, /factual review/);
+  const unavailable = await generateRaw('ad_headlines', content, { LLM_API_KEY: 'test-placeholder' }, async (_url, options) => {
+    const review = JSON.parse(options!.body as string).messages[0].content.includes('strict factual editor');
+    return review ? new Response('{}', { status: 503 }) : new Response(JSON.stringify({ choices: [{ message: { content: '{"headlines":["Plan dinner prep","Put bamboo on prep duty","What will you slice next?"]}' } }] }));
+  });
+  assert.equal(unavailable.mode, 'demo-fallback');
+});
+test('hard grounding screen rejects invented numbers/properties before model review', () => {
+  for (const body of ['Easy cleanup', 'Bamboo grain', 'Air dry upright', 'Canvas', '50 cm'])
+    assert.ok(unsupportedCopy({ sections: [{ title: 'Facts', body }] }, content, 'detail_page_outline').length);
+  assert.deepEqual(unsupportedCopy({ sections: [{ title: 'Dimensions', body: '30 × 20 cm; hand wash' }], needsInfo: ['Is a 2-pack available?'] }, content, 'detail_page_outline'), []);
+  assert.ok(unsupportedCopy({ headlines: ['Hand wash only', 'What is for dinner?', 'Put bamboo on prep duty'] }, content, 'ad_headlines').length);
+  assert.ok(unsupportedCopy({ headlines: ['Bamboo board for prep', 'What will you slice next?', 'A simple cutting surface'] }, content, 'ad_headlines').length);
 });
 
 test('extracts final JSON while hiding think blocks and accepting fenced output', () => {
@@ -96,7 +139,7 @@ test('reasoning-only, malformed, timeout and network responses visibly fall back
 });
 test('live content ignores separate reasoning and reports safe token counts only', async () => {
   const result = await generate('ad_headlines', content, { LLM_API_KEY: 'test-placeholder' }, async () => new Response(JSON.stringify({
-    choices: [{ message: { content: 'Answer: {"headlines":["One","Two","Three"]}', reasoning_content: 'private hidden text' } }],
+    choices: [{ message: { content: 'Answer: {"headlines":["Plan dinner prep","Put bamboo on prep duty","What will you slice next?"]}', reasoning_content: 'private hidden text' } }],
     usage: { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20, secret: 'not public' },
   })));
   assert.equal(result.mode, 'live'); assert.deepEqual(result.usage, { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20 });

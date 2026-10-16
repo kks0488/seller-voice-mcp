@@ -14,8 +14,8 @@ The web app is an **Alexa+ experience simulation**, independently built without 
 | --- | --- | --- |
 | `margin_check` | Price, cost; optional fee %, shipping, ad cost and currency | Unit profit, margin, break-even ROAS and warnings |
 | `listing_audit` | Listing text; optional material, dimensions, shipping and returns fact fields | English/Korean claim flags and missing fact fields |
-| `ad_headlines` | Product, known facts, optional audience | Exactly three headline drafts |
-| `shorts_script` | Product, known facts, optional audience | Contiguous scenes covering exactly 30 seconds |
+| `ad_headlines` | Product, known facts, optional audience | Three distinct selling angles, each at most 40 characters |
+| `shorts_script` | Product, known facts, optional audience | Two-second hook, contiguous 30-second beats, visuals, voiceover and on-screen text |
 | `detail_page_outline` | Product, known facts, optional audience | Page sections and information to verify |
 
 Each successful tool returns `{ speech, data, mode }` in both `structuredContent` and a JSON text block. Speech is at most two sentences. The first two tools are deterministic. The other three return labeled **demo templates** without an API key, and automatically use the configured provider when `LLM_API_KEY` exists. A failed live request returns `mode: "demo-fallback"`, a deterministic template, and a visible notice explaining that the result is not live AI output. Invalid inputs remain MCP tool errors.
@@ -70,7 +70,7 @@ gitleaks git --redact
 
 Tests cover math boundaries and expense handling, risky claims, missing facts, deterministic templates, mocked OpenAI-compatible request/response validation, reasoning-only answers, tolerant JSON extraction, timeout/network/HTTP fallback, safe token usage, protocol negotiation, all five tools through the official SDK HTTP client, bearer auth and Origin rejection. Mocked provider tests do not demonstrate live provider access.
 
-Verified delivery: 17 tests pass; TypeScript and the dependency audit pass. Production browser automation called all five tools successfully, and the official MCP Inspector listed tools and called `margin_check` on the public endpoint. See [capture evidence](media/verification.json). Microphone access, physical-device speech and actual Alexa+ account connection remain untested.
+Verified delivery: 20 tests and TypeScript pass. Production browser automation called all five tools successfully. See [capture evidence](media/verification.json). Microphone access, physical-device speech and actual Alexa+ account connection remain untested.
 
 For browser verification and real screen assets on a machine with Chromium:
 
@@ -97,11 +97,23 @@ The capture script runs all five tools over the actual HTTP connection, verifies
 
 ## Live mode
 
-Verified on production on October 16, 2026: real browser MCP `tools/call` requests returned `mode: "live"` for `ad_headlines`, `shorts_script` and `detail_page_outline`, with no fallbacks or page errors. Three provider calls used **766 prompt + 362 completion = 1,128 tokens**. Fresh 1920×1080 result captures and per-tool usage are in [media/verification.json](media/verification.json); raw WebM stays untracked in `media/`. The same capture checked all five tools and a 390-pixel mobile layout. These are browser/MCP results, not Alexa device validation.
+Production verification uses real browser MCP `tools/call` requests and requires `mode: "live"` for all three writing tools. Fresh 1920×1080 results, per-tool usage and panel coordinates are in [media/verification.json](media/verification.json); raw WebM/MP4 stays untracked in `media/`. The same capture checks all five tools and a 390-pixel mobile layout. These are browser/MCP results, not Alexa device validation.
 
-Production uses Nebius Token Factory with `nvidia/Nemotron-3_5-Lightning`. Keys live only in the hosting environment. Requests disable thinking with `chat_template_kwargs: { enable_thinking: false }`, use a `/no_think` instruction, JSON mode and a 1,800-token output budget. The client reads final `message.content`, strips `<think>` blocks, extracts JSON from fenced or wrapped answers and validates the tool schema. Separate reasoning content is never displayed. Usage includes only numeric prompt/completion/total token counts. HTTP errors, timeouts, missing final answers and invalid drafts show a **DEMO FALLBACK · LIVE UNAVAILABLE** label and notice.
+Production uses Nebius Token Factory with `nvidia/Nemotron-3_5-Lightning`. Keys live only in the hosting environment. Requests disable thinking with `chat_template_kwargs: { enable_thinking: false }` and `/no_think`, use JSON mode, and cap headline output at 300 tokens (scripts/outlines: 1,600). Tool-specific examples teach ordinary-use invitations and varied angles without inventing benefits. A deterministic screen rejects new numerals and known unsupported claims; a separate model pass reviews factual support. Rejected drafts get one revision, then a clearly labeled demo fallback. Review calls are capped at 500 tokens. These checks reduce mistakes; they cannot prove semantic grounding. Review every draft before publishing.
 
-The client uses the documented OpenAI-compatible `POST /chat/completions` schema (`messages`, `model`, `response_format`; `choices[0].message.content` response), HTTPS and a 25-second timeout. Another compatible provider can be selected entirely through environment variables, for example Gemini at `https://generativelanguage.googleapis.com/v1beta/openai/` with an available model such as `gemini-2.5-flash`. Confirm your chosen model supports JSON responses. No provider key is bundled or sent to the browser.
+The client reads final `message.content`, strips `<think>` blocks, extracts JSON from fenced/wrapped answers and validates the tool schema. Separate reasoning is never displayed. Numeric usage counts include drafting, review and any revision. HTTP errors, timeouts, missing final answers and invalid drafts show a **DEMO FALLBACK · LIVE UNAVAILABLE** label and notice.
+
+The client uses the [documented OpenAI-compatible API](https://docs.tokenfactory.nebius.com/quickstart) (`messages`, `model`, `response_format`; `choices[0].message.content` response), HTTPS and a 10-second timeout per request (at most four sequential requests). Another compatible provider can be selected entirely through environment variables. Confirm your chosen model supports JSON responses. No provider key is bundled or sent to the browser.
+
+Run the live writing regression screen (five tool calls across three products):
+
+```sh
+EVAL_URL=https://seller-voice-mcp.vercel.app/api/mcp npm run eval:live
+# Or export LLM_API_KEY to evaluate the configured provider directly.
+CAPTURE_URL=https://seller-voice-mcp.vercel.app REQUIRE_LIVE=1 npm run capture
+```
+
+The eval checks schemas, 40-character headlines, distinct openings, word overlap, supplied numerals, known unsupported claims and cross-product leakage. It prints drafts for human review; passing these bounded checks does not prove every implied claim is grounded. Browser capture must run on pilot; it records smooth typed requests and real responses without intercepting the API.
 
 When enabling live writing on a public deployment, configure `MCP_AUTH_TOKEN` to control who can use your provider key. The web app accepts that token in settings, keeps it in the current tab only and sends it in the Authorization header. It is never embedded in JavaScript, local storage, URLs or the activity payload. Same-origin browser requests are accepted; unrelated Origins are rejected. There is no durable rate limiter or multi-user account system.
 

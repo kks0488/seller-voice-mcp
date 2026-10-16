@@ -11,7 +11,8 @@
     "dev": "tsx watch src/local.ts",
     "test": "tsx --test test/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "capture": "tsx scripts/capture.ts"
+    "capture": "tsx scripts/capture.ts",
+    "eval:live": "tsx scripts/eval.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.1",

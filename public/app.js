@@ -78,7 +78,10 @@ function render(name, output, query) {
   } else if (name === 'ad_headlines') {
     data.headlines.forEach((h, i) => list.append(item(`HEADLINE 0${i + 1}`, h))); result.append(list);
   } else if (name === 'shorts_script') {
-    data.scenes.forEach(s => list.append(item(`${s.start}–${s.end}s · ${s.visual}`, s.voiceover))); list.append(item('CALL TO ACTION', data.cta)); result.append(list);
+    data.scenes.forEach(s => {
+      const beat = item(`${s.start}–${s.end}s · ${s.visual}`, s.voiceover);
+      beat.append(el('p', `ON SCREEN · ${s.onScreen}`)); list.append(beat);
+    }); list.append(item('CALL TO ACTION', data.cta)); result.append(list);
   } else {
     data.sections.forEach(s => list.append(item(s.title.toUpperCase(), s.body))); list.append(el('div', data.needsInfo.join(' '), 'missing')); result.append(list);
   }

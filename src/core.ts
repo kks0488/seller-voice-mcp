@@ -45,11 +45,13 @@ export function auditListing(raw: unknown) {
     note: 'A limited pattern check, not legal approval; negated or quoted claims may also be flagged. Missing facts refer to the supplied facts fields.' };
 }
 
-export const headlineOutput = z.object({ headlines: z.array(text.max(140)).length(3) });
+export const headlineOutput = z.object({ headlines: z.array(text.max(40)).length(3) }).refine(
+  ({ headlines }) => new Set(headlines.map(h => h.toLowerCase())).size === 3, 'Headlines must be distinct.');
 export const scriptOutput = z.object({ scenes: z.array(z.object({
   start: z.number().int().min(0), end: z.number().int().max(30), visual: text, voiceover: text,
+  onScreen: text.max(60),
 })).min(3).max(8), cta: text }).superRefine(({ scenes }, ctx) => {
-  if (scenes[0].start !== 0 || scenes.at(-1)!.end !== 30 || scenes.some((s, i) => s.end <= s.start || (i > 0 && s.start !== scenes[i - 1].end)))
+  if (scenes[0].start !== 0 || scenes[0].end > 2 || scenes.at(-1)!.end !== 30 || scenes.some((s, i) => s.end <= s.start || (i > 0 && s.start !== scenes[i - 1].end)))
     ctx.addIssue({ code: 'custom', message: 'Scenes must cover exactly 0–30 seconds with no gaps or overlaps.' });
 });
 export const outlineOutput = z.object({ sections: z.array(z.object({ title: text, body: text })).min(4).max(8), needsInfo: z.array(text).max(12) });
@@ -59,12 +61,13 @@ export type ContentTool = keyof typeof generatedSchemas;
 export function demoContent(tool: ContentTool, raw: unknown) {
   const { product, facts } = contentInput.parse(raw);
   // Deterministic templates use supplied facts; no fabricated product performance.
-  if (tool === 'ad_headlines') return { headlines: [`Meet ${product}`, `${product}, for your everyday`, `Take a closer look at ${product}`] };
+  const shortProduct = product.length <= 24 ? product : 'the product';
+  if (tool === 'ad_headlines') return { headlines: [`Meet ${shortProduct}`, `A closer look: ${shortProduct}`, `Explore ${shortProduct}`] };
   if (tool === 'shorts_script') return { scenes: [
-    { start: 0, end: 3, visual: 'Open on the product on a clean surface.', voiceover: `Meet ${product}.` },
-    { start: 3, end: 12, visual: 'Show the product from two angles.', voiceover: 'Let’s take a closer look at the details.' },
-    { start: 12, end: 23, visual: `Show a close-up. On-screen supplied facts: ${facts}`, voiceover: 'Check the product details to see if it fits your routine.' },
-    { start: 23, end: 30, visual: 'End on the product and a detail-page link.', voiceover: 'Review the specifications and purchase conditions before choosing.' },
+    { start: 0, end: 2, visual: 'Open on the product on a clean surface.', voiceover: 'Take a closer look.', onScreen: 'Your next everyday pick?' },
+    { start: 2, end: 12, visual: `Show ${product} from two angles.`, voiceover: 'Let’s take a closer look at the details.', onScreen: 'See the details' },
+    { start: 12, end: 23, visual: `Show a close-up of supplied facts: ${facts}`, voiceover: 'Check the product details to see if it fits your routine.', onScreen: 'Check the supplied specifications' },
+    { start: 23, end: 30, visual: 'End on the product and a detail-page link.', voiceover: 'Review the specifications and purchase conditions before choosing.', onScreen: 'Explore the product details' },
   ], cta: 'See the product details.' };
   return { sections: [
     { title: 'Meet the product', body: product }, { title: 'Supplied product facts', body: facts },
