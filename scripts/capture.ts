@@ -12,7 +12,7 @@ page.on('pageerror', e => errors.push(e.message));
 const calls: { tool: string; mode: string; speech: string; usage?: unknown; notice?: string }[] = [];
 try {
   await page.goto(url); await page.getByText('5 tools connected').waitFor();
-  await page.screenshot({ path: 'media/01-voice-desk.png', fullPage: true });
+  await page.screenshot({ path: 'media/01-voice-desk.png', fullPage: false });
   for (const [key, name] of [['margin', 'margin_check'], ['headlines', 'ad_headlines'], ['audit', 'listing_audit'], ['shorts', 'shorts_script'], ['outline', 'detail_page_outline']] as const) {
     await page.locator(`[data-example="${key}"]`).first().click();
     await page.getByRole('button', { name: 'Ask Seller Voice' }).click();
@@ -23,11 +23,11 @@ try {
     const output = payload.response.structuredContent;
     if (process.env.REQUIRE_LIVE === '1' && ['ad_headlines', 'shorts_script', 'detail_page_outline'].includes(name) && output.mode !== 'live') throw new Error(`Expected live ${name}: ${output.notice || output.mode}`);
     calls.push({ tool: name, mode: output.mode, speech: output.speech, ...(output.usage ? { usage: output.usage } : {}), ...(output.notice ? { notice: output.notice } : {}) });
-    await page.screenshot({ path: `media/0${calls.length + 1}-${key}.png`, fullPage: true });
+    await page.screenshot({ path: `media/0${calls.length + 1}-${key}.png`, fullPage: false });
     if (name === 'margin_check') {
       await page.locator('#payload summary').click();
       await page.locator('#payload').scrollIntoViewIfNeeded();
-      await page.screenshot({ path: 'media/08-mcp-payload.png', fullPage: true });
+      await page.screenshot({ path: 'media/08-mcp-payload.png', fullPage: false });
       await page.waitForTimeout(1800);
       await page.locator('#payload summary').click();
       await page.locator('h1').scrollIntoViewIfNeeded();
