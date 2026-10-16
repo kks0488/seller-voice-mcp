@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { auditListing, computeMargin, demoContent, generatedSchemas } from '../src/core.js';
-import { generate } from '../src/llm.js';
+import { generate, parseFinalJson } from '../src/llm.js';
 
 test('29,000 won example matches original commerce math', () => {
   const m = computeMargin({ price: 29000, cost: 11000 });
@@ -61,10 +61,44 @@ test('live mode uses documented OpenAI-compatible request and validates response
     assert.equal(url, 'https://api.tokenfactory.nebius.com/v1/chat/completions');
     const body = JSON.parse(options!.body as string);
     assert.equal(body.model, 'test-model'); assert.equal(body.messages[1].role, 'user');
+    assert.deepEqual(body.chat_template_kwargs, { enable_thinking: false });
+    assert.deepEqual(body.response_format, { type: 'json_object' });
+    assert.ok(body.max_tokens >= 1000); assert.ok(options!.signal);
     return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ headlines: ['One', 'Two', 'Three'] }) } }] }));
   });
   assert.equal(result.mode, 'live');
-  await assert.rejects(generate('ad_headlines', content, env, async () => new Response('{}', { status: 429 })), /HTTP 429/);
-  await assert.rejects(generate('ad_headlines', content, env, async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"headlines":["Only one"]}' } }] }))));
-  await assert.rejects(generate('shorts_script', content, env, async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ scenes: [{ start: 0, end: 3, visual: 'a', voiceover: 'b' }, { start: 4, end: 15, visual: 'a', voiceover: 'b' }, { start: 15, end: 30, visual: 'a', voiceover: 'b' }], cta: 'Go' }) } }] }))));
+  const limited = await generate('ad_headlines', content, env, async () => new Response('{}', { status: 429 }));
+  assert.equal(limited.mode, 'demo-fallback'); assert.match(limited.notice!, /HTTP 429/);
+  assert.equal((await generate('ad_headlines', content, env, async () => new Response(JSON.stringify({ choices: [{ message: { content: '{"headlines":["Only one"]}' } }] })))).mode, 'demo-fallback');
+  assert.equal((await generate('shorts_script', content, env, async () => new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ scenes: [{ start: 0, end: 3, visual: 'a', voiceover: 'b' }, { start: 4, end: 15, visual: 'a', voiceover: 'b' }, { start: 15, end: 30, visual: 'a', voiceover: 'b' }], cta: 'Go' }) } }] })))).mode, 'demo-fallback');
+});
+
+test('extracts final JSON while hiding think blocks and accepting fenced output', () => {
+  assert.deepEqual(parseFinalJson('<think>private reasoning {wrong}</think>```json\n{"headlines":["One","Two","Three"]}\n```'), { headlines: ['One', 'Two', 'Three'] });
+  assert.throws(() => parseFinalJson('<think>{"headlines":["reasoning"]}'));
+});
+test('reasoning-only, malformed, timeout and network responses visibly fall back without leaking errors', async () => {
+  const env = { LLM_API_KEY: 'test-placeholder-secret' };
+  for (const response of [
+    { choices: [{ message: { content: null, reasoning_content: '{"headlines":["secret"]}' } }], usage: { prompt_tokens: 12, completion_tokens: 4, total_tokens: 16 } },
+    { choices: [{ message: { content: '{invalid}' } }] },
+  ]) {
+    const result = await generate('ad_headlines', content, env, async () => new Response(JSON.stringify(response)));
+    assert.equal(result.mode, 'demo-fallback'); assert.match(result.notice!, /not a live AI result/);
+    assert.ok(!JSON.stringify(result).includes('secret'));
+    if (response.usage) assert.deepEqual(result.usage, response.usage);
+  }
+  const result = await generate('ad_headlines', content, env, async () => { throw new DOMException('sensitive provider body', 'TimeoutError'); });
+  assert.equal(result.mode, 'demo-fallback'); assert.match(result.notice!, /timed out/);
+  assert.ok(!JSON.stringify(result).includes('sensitive'));
+  const network = await generate('ad_headlines', content, env, async () => { throw new Error('secret transport detail'); });
+  assert.equal(network.mode, 'demo-fallback'); assert.ok(!JSON.stringify(network).includes('secret'));
+});
+test('live content ignores separate reasoning and reports safe token counts only', async () => {
+  const result = await generate('ad_headlines', content, { LLM_API_KEY: 'test-placeholder' }, async () => new Response(JSON.stringify({
+    choices: [{ message: { content: 'Answer: {"headlines":["One","Two","Three"]}', reasoning_content: 'private hidden text' } }],
+    usage: { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20, secret: 'not public' },
+  })));
+  assert.equal(result.mode, 'live'); assert.deepEqual(result.usage, { prompt_tokens: 12, completion_tokens: 8, total_tokens: 20 });
+  assert.ok(!JSON.stringify(result).includes('private'));
 });

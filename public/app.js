@@ -62,7 +62,7 @@ function render(name, output, query) {
   const speech = el('div', undefined, 'answer-speech'); speech.append(el('span', '✧'), el('p', output.speech)); result.append(speech);
   const data = output.data;
   const list = el('div', undefined, 'output-list');
-  $('result-mode').textContent = output.mode === 'demo' ? 'DEMO · TEMPLATE DRAFT' : output.mode.toUpperCase();
+  $('result-mode').textContent = output.mode === 'demo' ? 'DEMO · TEMPLATE DRAFT' : output.mode === 'demo-fallback' ? 'DEMO FALLBACK · LIVE UNAVAILABLE' : output.mode.toUpperCase();
   if (name === 'margin_check') {
     const metrics = el('div', undefined, 'metrics');
     const metric = (label, value, primary = false) => { const card = el('div', undefined, `metric${primary ? ' primary' : ''}`); card.append(el('small', label), el('strong', value)); return card; };
@@ -82,6 +82,7 @@ function render(name, output, query) {
   } else {
     data.sections.forEach(s => list.append(item(s.title.toUpperCase(), s.body))); list.append(el('div', data.needsInfo.join(' '), 'missing')); result.append(list);
   }
+  if (output.notice) result.append(el('div', output.notice, 'missing'));
   if (output.mode === 'demo') result.append(el('div', 'Deterministic demo template · no LLM API call was made. Your supplied product facts are used as written.', 'assumptions'));
   if ($('speak-toggle').getAttribute('aria-pressed') === 'true' && 'speechSynthesis' in window) {
     speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(output.speech); utterance.lang = 'en-US'; speechSynthesis.speak(utterance);

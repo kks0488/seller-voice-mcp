@@ -66,12 +66,15 @@ test('auth and Origin protect the real endpoint; authorized client succeeds', as
     const c = await client(f.url, 'test-only-placeholder'); try { assert.equal((await c.listTools()).tools.length, 5); } finally { await c.close(); }
   } finally { await f.close(); }
 });
-test('live provider failure is an explicit tool error, never a demo success', async () => {
+test('live provider failure yields a labeled demo fallback over MCP', async () => {
   const f = await fixture({ LLM_API_KEY: 'test-only-placeholder', LLM_BASE_URL: 'http://invalid.example' });
   try {
     const c = await client(f.url); try {
       const result = await c.callTool({ name: 'ad_headlines', arguments: { product: 'board', facts: 'bamboo' } });
-      assert.equal(result.isError, true); assert.equal((result.structuredContent as { mode: string }).mode, 'live-error');
+      assert.notEqual(result.isError, true);
+      const output = result.structuredContent as { mode: string; notice: string; speech: string };
+      assert.equal(output.mode, 'demo-fallback'); assert.match(output.notice, /not a live AI result/);
+      assert.match(output.speech, /demo draft/);
       assert.ok(!JSON.stringify(result).includes('test-only-placeholder'));
     } finally { await c.close(); }
   } finally { await f.close(); }

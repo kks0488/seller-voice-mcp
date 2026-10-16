@@ -7,7 +7,7 @@ export function createServer(env: Env = process.env) {
     instructions: 'Seller Voice helps hands-busy online sellers. Read the short speech aloud; show structured data on screen. Ask for missing inputs. Money values must share a currency. Generated copy is a draft. Demo means deterministic templates, not a live LLM.',
   });
   const annotations = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
-  const wrap = (speech: string, data: unknown, mode: string) => ({ content: [{ type: 'text' as const, text: JSON.stringify({ speech, data, mode }) }], structuredContent: { speech, data, mode } });
+  const wrap = (speech: string, data: unknown, mode: string, metadata: Record<string, unknown> = {}) => ({ content: [{ type: 'text' as const, text: JSON.stringify({ speech, data, mode, ...metadata }) }], structuredContent: { speech, data, mode, ...metadata } });
   server.registerTool('margin_check', {
     title: 'Check your margin', description: 'Calculate unit profit, margin percentage and break-even ROAS from price and cost. Optional platform fee percentage, shipping per unit and ad cost per unit default to zero. Same currency throughout; excludes taxes, overhead and returns.',
     inputSchema: marginInput.shape, annotations,
@@ -30,7 +30,7 @@ export function createServer(env: Env = process.env) {
   ] as const) {
     server.registerTool(name, { title, description, inputSchema: contentInput.shape,
       annotations: { ...annotations, idempotentHint: false, openWorldHint: Boolean(env.LLM_API_KEY) } }, async input => {
-      try { const { mode, data } = await generate(name, input, env); return wrap(speech, data, mode); }
+      try { const { mode, data, ...metadata } = await generate(name, input, env); return wrap(mode === 'demo-fallback' ? 'The live service was unavailable. I prepared a clearly labeled demo draft for review.' : speech, data, mode, metadata); }
       catch { return { isError: true, ...wrap(env.LLM_API_KEY ? 'The live writing service could not complete this request. Please try again or check your provider settings.' : 'The demo draft could not be created. Check your product facts and try again.', { code: 'GENERATION_FAILED' }, env.LLM_API_KEY ? 'live-error' : 'demo-error') }; }
     });
   }

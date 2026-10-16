@@ -18,7 +18,7 @@ The web app is an **Alexa+ experience simulation**, independently built without 
 | `shorts_script` | Product, known facts, optional audience | Contiguous scenes covering exactly 30 seconds |
 | `detail_page_outline` | Product, known facts, optional audience | Page sections and information to verify |
 
-Each successful tool returns `{ speech, data, mode }` in both `structuredContent` and a JSON text block. Speech is at most two sentences. The first two tools are deterministic. The other three return labeled **demo templates** without an API key, and automatically use the configured provider when `LLM_API_KEY` exists. A failed live request returns an explicit MCP tool error; it never becomes a pretend demo success.
+Each successful tool returns `{ speech, data, mode }` in both `structuredContent` and a JSON text block. Speech is at most two sentences. The first two tools are deterministic. The other three return labeled **demo templates** without an API key, and automatically use the configured provider when `LLM_API_KEY` exists. A failed live request returns `mode: "demo-fallback"`, a deterministic template, and a visible notice explaining that the result is not live AI output. Invalid inputs remain MCP tool errors.
 
 Example: “What's my break-even ROAS if I sell at 29,000 won with 11,000 cost?” gives **₩18,000 unit profit, 62.1% margin, 1.61× ROAS**, with fees, shipping and ads defaulting to zero. Add “fee 5, shipping 3000, ad cost 4000” to include those expenses. Money inputs must share a currency. Taxes, overhead and returns are excluded. ROAS uses profit **before** ad spend; it does not change when ad cost changes.
 
@@ -68,9 +68,9 @@ gitleaks detect --source . --redact
 gitleaks git --redact
 ```
 
-Tests cover math boundaries and expense handling, risky claims, missing facts, deterministic templates, mocked OpenAI-compatible request/response validation, live errors, protocol negotiation, all five tools through the official SDK HTTP client, bearer auth and Origin rejection. Mocked provider tests do not demonstrate live provider access.
+Tests cover math boundaries and expense handling, risky claims, missing facts, deterministic templates, mocked OpenAI-compatible request/response validation, reasoning-only answers, tolerant JSON extraction, timeout/network/HTTP fallback, safe token usage, protocol negotiation, all five tools through the official SDK HTTP client, bearer auth and Origin rejection. Mocked provider tests do not demonstrate live provider access.
 
-Verified delivery: 14 tests pass; TypeScript and the dependency audit pass. Production browser automation called all five tools successfully, and the official MCP Inspector listed tools and called `margin_check` on the public endpoint. See [capture evidence](media/verification.json). Microphone access, physical-device speech and actual Alexa+ account connection remain untested.
+Verified delivery: 17 tests pass; TypeScript and the dependency audit pass. Production browser automation called all five tools successfully, and the official MCP Inspector listed tools and called `margin_check` on the public endpoint. See [capture evidence](media/verification.json). Microphone access, physical-device speech and actual Alexa+ account connection remain untested.
 
 For browser verification and real screen assets on a machine with Chromium:
 
@@ -90,10 +90,14 @@ The capture script runs all five tools over the actual HTTP connection, verifies
 | --- | --- |
 | `LLM_BASE_URL` | Default `https://api.tokenfactory.nebius.com/v1/` |
 | `LLM_API_KEY` | Empty means demo templates; set means live writing requests |
-| `LLM_MODEL` | Default `meta-llama/Llama-3.3-70B-Instruct`; set a model available in your account |
+| `LLM_MODEL` | Default `nvidia/Nemotron-3_5-Lightning`; set a model available in your account |
 | `MCP_AUTH_TOKEN` | Optional shared bearer token for compatible MCP clients |
 | `MCP_ALLOWED_ORIGINS` | Optional comma-separated additional exact browser origins |
 | `PORT` | Local port, default 3000 |
+
+## Live mode
+
+Production uses Nebius Token Factory with `nvidia/Nemotron-3_5-Lightning`. Keys live only in the hosting environment. Requests disable thinking with `chat_template_kwargs: { enable_thinking: false }`, use a `/no_think` instruction, JSON mode and a 1,800-token output budget. The client reads final `message.content`, strips `<think>` blocks, extracts JSON from fenced or wrapped answers and validates the tool schema. Separate reasoning content is never displayed. Usage includes only numeric prompt/completion/total token counts. HTTP errors, timeouts, missing final answers and invalid drafts show a **DEMO FALLBACK · LIVE UNAVAILABLE** label and notice.
 
 The client uses the documented OpenAI-compatible `POST /chat/completions` schema (`messages`, `model`, `response_format`; `choices[0].message.content` response), HTTPS and a 25-second timeout. Another compatible provider can be selected entirely through environment variables, for example Gemini at `https://generativelanguage.googleapis.com/v1beta/openai/` with an available model such as `gemini-2.5-flash`. Confirm your chosen model supports JSON responses. No provider key is bundled or sent to the browser.
 
@@ -149,7 +153,7 @@ Sources checked for this entry: [hackathon rules](https://amazonappdev2026.devpo
 vercel --prod --yes
 ```
 
-Set optional secrets through the hosting environment, never committed files. The static interface is in `public/`; Vercel compiles the TypeScript functions in `api/`. The GitHub Actions test workflow is prepared locally; publishing it requires the owner's existing GitHub login to authorize the `workflow` scope. The application source is already public. No database or paid dependency is required for demo mode.
+Set optional secrets through the hosting environment, never committed files. The static interface is in `public/`; Vercel compiles the TypeScript functions in `api/`. The GitHub Actions workflow runs TypeScript checks and tests on pushes and pull requests. The application source is public. No database or paid dependency is required for demo mode.
 
 ## What was built during the hackathon
 

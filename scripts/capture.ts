@@ -9,7 +9,7 @@ const context = await browser.newContext({ viewport: { width: 1920, height: 1080
 const page = await context.newPage();
 const errors: string[] = [];
 page.on('pageerror', e => errors.push(e.message));
-const calls: { tool: string; mode: string; speech: string }[] = [];
+const calls: { tool: string; mode: string; speech: string; usage?: unknown; notice?: string }[] = [];
 try {
   await page.goto(url); await page.getByText('5 tools connected').waitFor();
   await page.screenshot({ path: 'media/01-voice-desk.png', fullPage: true });
@@ -17,10 +17,12 @@ try {
     await page.locator(`[data-example="${key}"]`).first().click();
     await page.getByRole('button', { name: 'Ask Seller Voice' }).click();
     await page.waitForFunction(expected => document.getElementById('payload-content')!.textContent!.includes(`"name": "${expected}"`), name);
-    await page.waitForFunction(() => !(document.getElementById('send') as HTMLButtonElement).disabled);
+    await page.waitForFunction(() => !(document.getElementById('send') as HTMLButtonElement).disabled, undefined, { timeout: 45000 });
     const payload = JSON.parse((await page.locator('#payload-content').textContent())!);
     if (payload.response.isError) throw new Error(`Tool failed: ${name}`);
-    calls.push({ tool: name, mode: payload.response.structuredContent.mode, speech: payload.response.structuredContent.speech });
+    const output = payload.response.structuredContent;
+    if (process.env.REQUIRE_LIVE === '1' && ['ad_headlines', 'shorts_script', 'detail_page_outline'].includes(name) && output.mode !== 'live') throw new Error(`Expected live ${name}: ${output.notice || output.mode}`);
+    calls.push({ tool: name, mode: output.mode, speech: output.speech, ...(output.usage ? { usage: output.usage } : {}), ...(output.notice ? { notice: output.notice } : {}) });
     await page.screenshot({ path: `media/0${calls.length + 1}-${key}.png`, fullPage: true });
     if (name === 'margin_check') {
       await page.locator('#payload summary').click();
