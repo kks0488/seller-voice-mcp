@@ -149,7 +149,7 @@ Sources checked for this entry: [hackathon rules](https://amazonappdev2026.devpo
 vercel --prod --yes
 ```
 
-Set optional secrets through the hosting environment, never committed files. The static interface is in `public/`; Vercel compiles the TypeScript functions in `api/`. Tests run in GitHub Actions. No database or paid dependency is required for demo mode.
+Set optional secrets through the hosting environment, never committed files. The static interface is in `public/`; Vercel compiles the TypeScript functions in `api/`. The GitHub Actions test workflow is prepared locally; publishing it requires the owner's existing GitHub login to authorize the `workflow` scope. The application source is already public. No database or paid dependency is required for demo mode.
 
 ## What was built during the hackathon
 
