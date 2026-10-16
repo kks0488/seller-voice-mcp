@@ -1,0 +1,10 @@
+node_modules/
+.vercel/
+.env*
+!.env.example
+coverage/
+media/*.webm
+media/*.mp4
+*.log
+.DS_Store
+.vercel

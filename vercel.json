@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "functions": { "api/*.ts": { "maxDuration": 60 } },
+  "rewrites": [{ "source": "/mcp", "destination": "/api/mcp" }],
+  "headers": [{ "source": "/(.*)", "headers": [
+    { "key": "X-Content-Type-Options", "value": "nosniff" },
+    { "key": "Referrer-Policy", "value": "same-origin" },
+    { "key": "Permissions-Policy", "value": "microphone=(self)" }
+  ] }]
+}

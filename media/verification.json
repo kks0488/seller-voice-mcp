@@ -1,0 +1,35 @@
+{
+  "url": "https://seller-voice-mcp.vercel.app",
+  "capturedAt": "2026-10-16T06:20:27.989Z",
+  "viewport": "1920x1080",
+  "calls": [
+    {
+      "tool": "margin_check",
+      "mode": "deterministic",
+      "speech": "Your unit profit is ₩18,000, with a 62.1 percent margin. Your break-even return on ad spend is 1.61 times."
+    },
+    {
+      "tool": "ad_headlines",
+      "mode": "demo",
+      "speech": "I drafted three headlines for your product. Review them before publishing."
+    },
+    {
+      "tool": "listing_audit",
+      "mode": "deterministic",
+      "speech": "I found 3 claim flags and 4 missing fact fields. Review the highlighted wording before publishing."
+    },
+    {
+      "tool": "shorts_script",
+      "mode": "demo",
+      "speech": "Your thirty-second script is ready. The screen shows each scene and its voiceover."
+    },
+    {
+      "tool": "detail_page_outline",
+      "mode": "demo",
+      "speech": "Your detail page outline is ready. Check the missing information before publishing."
+    }
+  ],
+  "mobile": "390x844, no horizontal overflow",
+  "pageErrors": [],
+  "note": "Browser automation with text input; microphone, physical-device voice and Alexa+ account connection were not tested."
+}

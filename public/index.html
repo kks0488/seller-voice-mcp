@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Hands busy. Business moving. A voice-first MCP assistant for small sellers.">
+  <title>Seller Voice — Your next move, spoken.</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="Seller Voice home"><span class="brand-mark">sv<span>•</span></span><span>seller voice<small>THE SELLER'S SIDEKICK</small></span></a>
+    <div class="workspace"><span class="tiny-square">S</span><div>Your workspace<small>Independent seller</small></div><span class="workspace-dot"></span></div>
+    <p class="nav-label">WORKSPACE</p>
+    <button class="nav-item active" type="button"><span>◉</span> Voice desk <span class="live-dot"></span></button>
+    <p class="nav-label tools-label">YOUR TOOLS <span>05</span></p>
+    <nav aria-label="Seller tools">
+      <button class="nav-item tool-pick" data-example="margin"><span>↗</span> Margin check</button>
+      <button class="nav-item tool-pick" data-example="audit"><span>⌕</span> Listing audit</button>
+      <button class="nav-item tool-pick" data-example="headlines"><span>✧</span> Ad headlines</button>
+      <button class="nav-item tool-pick" data-example="shorts"><span>▷</span> Shorts script</button>
+      <button class="nav-item tool-pick" data-example="outline"><span>▤</span> Detail page outline</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="protocol-mark">MCP <span>CONNECTED TO POSSIBILITY</span></div><p>One conversation.<br>Five ways to move forward.</p><a href="https://github.com/kks0488/seller-voice-mcp" target="_blank" rel="noreferrer">View open source <span>↗</span></a></div>
+  </aside>
+  <main>
+    <header class="topbar"><div><span class="breadcrumb">Workspace</span><span class="slash">/</span>Voice desk</div><div class="top-status"><span class="status-dot"></span><span id="connection">Connecting to MCP</span><span class="separator"></span><span class="avatar">SK</span></div></header>
+    <div class="page">
+      <div class="heading"><div><p class="eyebrow">A LITTLE LESS TYPING. A LOT MORE DOING.</p><h1>Your next move, spoken<span>.</span></h1><p>For the moments your hands are full, but your ideas aren’t.</p></div><span class="mode-badge" id="mode-badge">DEMO MODE</span></div>
+      <section class="hero" aria-label="Voice assistant introduction">
+        <div class="hero-copy"><span class="hero-kicker"><span class="live-dot"></span> MEET YOUR SELLER SIDEKICK</span><h2>You pack the orders.<br>I’ll handle the numbers.</h2><p>Check a margin. Find the right words. Catch a risky claim.<br>Just ask, and keep your business moving.</p><button type="button" id="hero-mic" class="hero-voice">Let’s talk <span>↗</span></button></div>
+        <div class="orb-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orb"><div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><span class="orb-caption">SMALL BUSINESS. BIG VOICE.</span></div>
+        <span class="hero-index">01 / YOUR VOICE DESK</span>
+      </section>
+      <div class="desk-grid">
+        <section class="conversation" aria-labelledby="desk-title">
+          <div class="section-heading"><h2 id="desk-title">What’s on your mind?</h2><button class="quiet-button" id="speak-toggle" aria-pressed="false">◖ Audio off</button></div>
+          <p class="section-subtitle">Try a question below, or make it your own.</p>
+          <div class="suggestions">
+            <button data-example="margin"><span>↗</span><div>Know your numbers<small>“What’s my break-even ROAS?”</small></div><b>↗</b></button>
+            <button data-example="headlines"><span>✧</span><div>Find your next headline<small>“Give me three ad headlines.”</small></div><b>↗</b></button>
+            <button data-example="audit"><span>⌕</span><div>Publish with more confidence<small>“Check this listing for risky claims.”</small></div><b>↗</b></button>
+          </div>
+          <form id="ask-form">
+            <label class="input-label" for="question">YOUR REQUEST</label>
+            <div class="composer"><textarea id="question" rows="3" maxlength="4000" placeholder="What’s my break-even ROAS if I sell at 29,000 won with 11,000 cost?" required></textarea><div class="composer-bottom"><button type="button" id="mic" class="mic-button" aria-label="Start voice input">◉</button><span id="voice-status">Type a question or use your voice</span><button id="send" type="submit">Ask Seller Voice <span>↗</span></button></div></div>
+            <details class="product-context"><summary>Product facts & connection settings <span>+</span></summary><label for="facts">Facts for writing tools (never inferred)</label><textarea id="facts" rows="2" maxlength="4000">Bamboo cutting board. Material: bamboo. Dimensions: 30 × 20 cm. Hand wash only.</textarea><label for="token">Optional MCP bearer token</label><input id="token" type="password" autocomplete="off" placeholder="Only if your server requires one"><small>Kept in this tab only. Never placed in the URL.</small></details>
+          </form>
+          <div class="privacy-note"><span>◇</span> No orders changed. No content published. You stay in control.</div>
+        </section>
+        <section class="result-panel" aria-labelledby="result-title">
+          <div class="section-heading"><h2 id="result-title">Your answer, at a glance</h2><span class="small-label" id="result-mode">READY WHEN YOU ARE</span></div>
+          <div id="result" aria-live="polite"><div class="empty-result"><div class="empty-icon">✧</div><h3>A clearer next step<br>starts with a question.</h3><p>Your spoken answer and useful details<br>will appear right here.</p><span>VOICE-FIRST. FACTS ALWAYS.</span></div></div>
+        </section>
+      </div>
+      <section class="trace" aria-label="MCP activity"><div class="trace-title"><span class="trace-dot"></span>MCP ACTIVITY<span class="trace-tag">REAL TOOL CALLS</span></div><div id="trace-lines" aria-live="polite">Waiting for the server handshake…</div><details id="payload"><summary>Inspect request & response</summary><pre id="payload-content">Run a tool to see the actual MCP payload.</pre></details></section>
+      <footer><span>BUILT FOR THE PEOPLE BEHIND THE PACKAGES.</span><span>Alexa+ experience simulation · Independent project · <a href="https://github.com/kks0488/seller-voice-mcp">MIT licensed</a></span></footer>
+    </div>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

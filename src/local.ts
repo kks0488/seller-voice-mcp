@@ -1,0 +1,11 @@
+import express from 'express';
+import { fileURLToPath } from 'node:url';
+import { mcpHandler } from './http.js';
+import status from '../api/status.js';
+const app = express();
+app.use(express.json({ limit: '32kb' }));
+app.all(['/mcp', '/api/mcp'], mcpHandler());
+app.get('/api/status', status);
+app.use(express.static(fileURLToPath(new URL('../public', import.meta.url))));
+const listener = app.listen(Number(process.env.PORT || 3000), '127.0.0.1', () => console.log('Seller Voice: http://127.0.0.1:' + (process.env.PORT || 3000)));
+for (const signal of ['SIGTERM', 'SIGINT'] as const) process.on(signal, () => listener.close(() => process.exit(0)));
